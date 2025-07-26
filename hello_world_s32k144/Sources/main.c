@@ -52,18 +52,6 @@ volatile int exit_code = 0;
 #endif
 
 
-#define GPIO_PORTD	PTD
-#define GPIO_PORTA	PTA
-#define GPIO_PORTB	PTB
-
-
-#define LIN1		2U
-#define LIN2		0U
-
-#define CAN_STB		13U//7U
-#define CAN_EN		6U
-
-
 
 void delay(volatile int cycles)
 {
@@ -103,30 +91,20 @@ int main(void)
    */
   PINS_DRV_Init(NUM_OF_CONFIGURED_PINS, g_pin_mux_InitConfigArr);
 
-  /* Output direction for LED0 & LED1 */
-//  PINS_DRV_SetPinsDirection(GPIO_PORT, ((1 << LED1) | (1 << LED2)));
+  /* Configure LED pins as outputs */
+  PINS_DRV_SetPinsDirection(GPIO_PORT, ((1 << LED1) | (1 << LED2)));
 
-  PINS_DRV_SetPinsDirection(GPIO_PORTB, (1 << CAN_STB));
-  PINS_DRV_SetPinsDirection(GPIO_PORTA, (1 << CAN_EN));
-
-  /* Set Output value LED0 & LED1 */
-//  PINS_DRV_SetPins(GPIO_PORT, 1 << LED1);
-//  PINS_DRV_ClearPins(GPIO_PORT, 1 << LED2);
-
-  PINS_DRV_ClearPins(GPIO_PORTB, 1 << CAN_STB);
-  PINS_DRV_ClearPins(GPIO_PORTA, 1 << CAN_EN);
+  /* Initialize LED states - LED1 on, LED2 off */
+  PINS_DRV_SetPins(GPIO_PORT, 1 << LED1);
+  PINS_DRV_ClearPins(GPIO_PORT, 1 << LED2);
 
   for (;;)
   {
       /* Insert a small delay to make the blinking visible */
       delay(720000);
-//      delay(3600000);
 
-      /* Toggle output value LED0 & LED1 */
-//      PINS_DRV_TogglePins(GPIO_PORT, ((1 << LED1) | (1 << LED2)));
-
-      PINS_DRV_TogglePins(GPIO_PORTA, (1 << CAN_EN));
-      PINS_DRV_TogglePins(GPIO_PORTB, (1 << CAN_STB));
+      /* Toggle both LEDs to create blinking effect */
+      PINS_DRV_TogglePins(GPIO_PORT, ((1 << LED1) | (1 << LED2)));
   }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
